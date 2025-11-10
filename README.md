@@ -14,7 +14,7 @@
 ![Диаграмма](exaple.png)
 
 
-- [Презентационный отчет (presentation.md)](presentation.md)
+- [Отчет (presentation.md)](presentation.md)
   Содержит отчет по 6 лабораторной работе.
 
 ---
