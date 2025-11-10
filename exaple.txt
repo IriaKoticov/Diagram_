@@ -1,0 +1,35 @@
+@startuml
+title Варианты использования умной системы лифта
+
+actor "Пассажир" as Passenger
+actor "Диспетчер" as Dispatcher
+actor "Система безопасности" as SecuritySystem
+
+rectangle "Умная система лифта" as ElevatorSystem {
+    usecase "Вызвать лифт" as UC_Call
+    usecase "Выбрать этаж" as UC_SelectFloor
+    usecase "Открыть/закрыть двери" as UC_Doors
+    usecase "Обработка запросов" as UC_Requests
+    usecase "Оптимизация движения" as UC_Optimize
+    usecase "Отображение состояния" as UC_Status
+    usecase "Аварийная остановка" as UC_Emergency
+    usecase "Диагностика неисправностей" as UC_Diagnose
+}
+
+Passenger --> UC_Call
+Passenger --> UC_SelectFloor
+Passenger --> UC_Doors
+Passenger <-- UC_Status
+
+Dispatcher --> UC_Diagnose
+Dispatcher --> UC_Requests
+Dispatcher --> UC_Optimize
+
+SecuritySystem --> UC_Emergency
+SecuritySystem --> UC_Diagnose
+
+UC_Requests <.. UC_Optimize : <<include>>
+UC_Doors <.. UC_Emergency : <<extend>>
+
+@enduml
+

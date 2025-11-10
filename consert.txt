@@ -1,0 +1,52 @@
+@startuml
+title Варианты использования музыкального концерта
+
+actor "Организатор" as Organizer
+actor "Артист" as Artist
+actor "Зритель" as Audience
+actor "Служба безопасности" as Security
+actor "Система продажи билетов" as TicketSystem
+actor "Технический персонал" as TechStaff
+
+rectangle "Система музыкального концерта" as ConcertSystem {
+    usecase "Планирование концерта" as UC_Plan
+    usecase "Бронирование площадки" as UC_BookVenue
+    usecase "Продажа билетов" as UC_TicketSales
+    usecase "Регистрация зрителей" as UC_CheckIn
+    usecase "Выступление артиста" as UC_Perform
+    usecase "Управление сценой и светом" as UC_Stage
+    usecase "Настройка оборудования" as UC_Setup
+    usecase "Обеспечение безопасности" as UC_Security
+    usecase "Эвакуация и экстренные меры" as UC_Emergency
+    usecase "Отчет о мероприятии" as UC_Report
+}
+
+Organizer --> UC_Plan
+Organizer --> UC_BookVenue
+Organizer --> UC_TicketSales
+Organizer --> UC_Report
+
+Artist --> UC_Perform
+Artist --> UC_Stage
+
+Audience --> UC_TicketSales
+Audience --> UC_CheckIn
+Audience <-- UC_Perform
+
+Security --> UC_Security
+Security --> UC_Emergency
+
+TicketSystem --> UC_TicketSales
+
+TechStaff --> UC_Setup
+TechStaff --> UC_Stage
+
+UC_Plan <.. UC_BookVenue : <<include>>
+UC_Plan <.. UC_TicketSales : <<include>>
+UC_Plan <.. UC_Setup : <<include>>
+UC_Perform <.. UC_Stage : <<include>>
+UC_Stage <.. UC_Setup : <<include>>
+UC_Security <.. UC_Emergency : <<extend>>
+UC_Report <.. UC_Plan : <<include>>
+
+@enduml
