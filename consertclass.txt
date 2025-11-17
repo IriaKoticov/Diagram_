@@ -1,0 +1,124 @@
+@startuml
+title Диаграмма классов системы музыкального концерта
+
+' Классы акторов
+class Organizer {
+    +planConcert()
+    +bookVenue()
+    +manageTicketSales()
+    +generateReport()
+}
+
+class Artist {
+    +perform()
+    +manageStage()
+}
+
+class Audience {
+    +buyTicket()
+    +checkIn()
+    +watchPerformance()
+}
+
+class Security {
+    +monitorSafety()
+    +triggerEmergency()
+}
+
+class TicketSystem {
+    +validateTicket()
+    +issueTicket()
+}
+
+class TechStaff {
+    +setupEquipment()
+    +controlStageLight()
+}
+
+' Основные модули системы
+class ConcertSystem {
+    +planConcert()
+    +bookVenue()
+    +sellTickets()
+    +checkInAudience()
+    +performShow()
+    +manageStage()
+    +setupEquipment()
+    +ensureSafety()
+    +handleEmergency()
+    +generateReport()
+}
+
+class Plan {
+    +createEventPlan()
+}
+
+class Venue {
+    +book()
+    +cancelBooking()
+}
+
+class Tickets {
+    +sell()
+    +refund()
+    +checkAvailability()
+}
+
+class CheckIn {
+    +registerAudience()
+    +validateTicket()
+}
+
+class Stage {
+    +setupStage()
+    +controlLights()
+}
+
+class Setup {
+    +setupEquipment()
+    +checkEquipment()
+}
+
+class Safe {
+    +monitor()
+    +reportStatus()
+}
+
+class Emergency {
+    +evacuateAudience()
+    +stopEvent()
+}
+
+class Report {
+    +generate()
+    +sendToOrganizer()
+}
+
+' Связи между актерами и системой
+Organizer --> ConcertSystem
+Artist --> ConcertSystem
+Audience --> ConcertSystem
+Security --> ConcertSystem
+TicketSystem --> ConcertSystem
+TechStaff --> ConcertSystem
+
+' Взаимодействия модулей (агрегация/композиция)
+ConcertSystem *-- Plan
+ConcertSystem *-- Venue
+ConcertSystem *-- Tickets
+ConcertSystem *-- CheckIn
+ConcertSystem *-- Stage
+ConcertSystem *-- Setup
+ConcertSystem *-- Safe
+ConcertSystem *-- Emergency
+ConcertSystem *-- Report
+
+' Взаимосвязи между модулями (include/extend)
+Plan --> Venue : <<include>>
+Plan --> Tickets : <<include>>
+Plan --> Setup : <<include>>
+Stage --> Setup : <<include>>
+Safe --> Emergency : <<extend>>
+Report --> Plan : <<include>>
+
+@enduml

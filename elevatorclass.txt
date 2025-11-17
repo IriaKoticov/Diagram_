@@ -1,0 +1,71 @@
+@startuml
+title Диаграмма классов умной системы лифта
+
+' Классы акторов
+class Passenger {
+    +callElevator()
+    +selectFloor()
+    +checkStatus()
+}
+
+class Dispatcher {
+    +requestDiagnostics()
+}
+
+class SecuritySystem {
+    +triggerEmergencyStop()
+}
+
+' Основной класс системы
+class ElevatorSystem {
+    +callElevator()
+    +selectFloor()
+    +openDoors()
+    +updateStatus()
+    +emergencyStop()
+    +performDiagnostics()
+}
+
+' Модули системы
+class Requests {
+    +addCallRequest()
+    +addFloorRequest()
+    +processRequests()
+}
+
+class Optimize {
+    +calculateOptimalRoute()
+}
+
+class Doors {
+    +open()
+    +close()
+}
+
+class Status {
+    +updateDisplay()
+    +getStatus()
+}
+
+class Diagnose {
+    +runDiagnostics()
+    +getReport()
+}
+
+' Связи между актерами и системой
+Passenger --> ElevatorSystem
+Dispatcher --> ElevatorSystem
+SecuritySystem --> ElevatorSystem
+
+' Агрегация / композиция модулей
+ElevatorSystem *-- Requests
+ElevatorSystem *-- Optimize
+ElevatorSystem *-- Doors
+ElevatorSystem *-- Status
+ElevatorSystem *-- Diagnose
+
+' Взаимодействия между модулями (include/extend)
+Requests --> Optimize : <<include>>
+Doors --> ElevatorSystem : <<extend>> (при аварийной остановке)
+
+@enduml

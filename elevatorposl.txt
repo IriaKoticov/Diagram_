@@ -1,0 +1,45 @@
+@startuml
+title Последовательность работы умной системы лифта
+
+actor Passenger as "Пассажир"
+actor Dispatcher as "Диспечер"
+actor SecuritySystem as "Система безопасности"
+
+participant "Умная система лифта" as ElevatorSystem
+participant "Модуль обработки запросов" as Requests
+participant "Модуль оптимизации" as Optimize
+participant "Модуль дверей" as Doors
+participant "Модуль отображения состояния" as Status
+participant "Модуль диагностики" as Diagnose
+
+== Вызов лифта пассажиром ==
+Passenger -> ElevatorSystem: Вызвать лифт (UC_Call)
+ElevatorSystem -> Requests: Добавить запрос\nна вызов лифта
+Requests -> Optimize: Запрос оптимизации маршрута
+Optimize --> Requests: Оптимизированный маршрут
+Requests --> ElevatorSystem: Решение о подаче лифта
+
+ElevatorSystem -> Doors: Открыть двери
+Doors --> ElevatorSystem: Двери открыты
+
+== Пассажир выбирает этаж ==
+Passenger -> ElevatorSystem: Выбрать этаж (UC_SelectFloor)
+ElevatorSystem -> Requests: Добавить запрос на этаж
+Requests -> Optimize: Пересчитать оптимальный маршрут
+Optimize --> Requests: Обновлённый маршрут
+
+ElevatorSystem -> Status: Обновить отображение состояния
+Status --> Passenger: Текущее состояние (UC_Status)
+
+== Возможная аварийная ситуация ==
+SecuritySystem -> ElevatorSystem: Аварийная остановка (UC_Emergency)
+ElevatorSystem -> Doors: Открыть двери (расширение UC_Doors)
+Doors --> ElevatorSystem: Двери открыты
+
+== Диагностика ==
+Dispatcher -> ElevatorSystem: Запрос диагностики (UC_Diagnose)
+ElevatorSystem -> Diagnose: Выполнить диагностику
+Diagnose --> ElevatorSystem: Отчёт
+ElevatorSystem --> Dispatcher: Результат диагностики
+
+@enduml

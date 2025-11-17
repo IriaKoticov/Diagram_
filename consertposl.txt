@@ -1,0 +1,81 @@
+@startuml
+title Последовательность работы системы музыкального концерта
+
+actor Organizer as "Организатор"
+actor Artist as "Артист"
+actor Audience as "Зритель"
+actor Security as "Служба безопасности"
+actor TicketSystem as "Система продажи билетов"
+actor TechStaff as "Тех. персонал"
+
+participant "Система концерта" as Concert
+participant "Модуль планирования" as Plan
+participant "Модуль бронирования площадки" as Venue
+participant "Модуль продажи билетов" as Tickets
+participant "Модуль регистрации зрителей" as CheckIn
+participant "Модуль сцены/света" as Stage
+participant "Модуль настройки оборудования" as Setup
+participant "Модуль безопасности" as Safe
+participant "Модуль экстренных мер" as Emergency
+participant "Модуль отчётов" as Report
+
+== Планирование мероприятия ==
+Organizer -> Concert: Начать планирование (UC_Plan)
+Concert -> Plan: Создать план мероприятия
+
+Plan -> Venue: Бронирование площадки (include UC_BookVenue)
+Venue --> Plan: Площадка забронирована
+
+Plan -> Tickets: Подготовка продажи билетов (include UC_TicketSales)
+Tickets --> Plan: Билеты готовы
+
+Plan -> Setup: План подготовки оборудования (include UC_Setup)
+Setup --> Plan: План настройки готов
+
+Plan --> Concert: План мероприятия сформирован
+
+== Продажа билетов ==
+Audience -> Tickets: Покупка билета (UC_TicketSales)
+TicketSystem -> Tickets: Подтверждение продажи
+Tickets --> Audience: Электронный билет
+
+== День мероприятия: настройка ==
+TechStaff -> Concert: Начать настройку оборудования (UC_Setup)
+Concert -> Setup: Выполнить настройку
+Setup --> Concert: Оборудование настроено
+
+TechStaff -> Concert: Управление сценой и светом (UC_Stage)
+Concert -> Stage: Настройка сцены и света
+Stage -> Setup: Использовать данные предварительной настройки (include)
+Setup --> Stage: Подтверждение
+Stage --> Concert: Сцена и свет готовы
+
+== Регистрация зрителей ==
+Audience -> Concert: Регистрация на входе (UC_CheckIn)
+Concert -> CheckIn: Проверить билет
+CheckIn --> Audience: Разрешён вход
+
+== Выступление ==
+Artist -> Concert: Начать выступление (UC_Perform)
+Concert -> Stage: Активировать сцену/свет (include UC_Stage)
+Stage --> Concert: Сцена активна
+Concert --> Audience: Демонстрация выступления
+
+== Безопасность ==
+Security -> Concert: Контроль безопасности (UC_Security)
+Concert -> Safe: Обеспечивать безопасность
+Safe --> Security: Отчёт об обстановке
+
+== Возможная экстренная ситуация ==
+Security -> Concert: Сообщение об угрозе (UC_Emergency)
+Concert -> Emergency: Запуск эвакуации (extend UC_Security)
+Emergency --> Audience: Инструкции по эвакуации
+Emergency --> Security: Координация действий
+Emergency --> Concert: Мероприятие остановлено
+
+== Отчёт ==
+Organizer -> Concert: Запросить отчёт (UC_Report)
+Concert -> Report: Сформировать отчёт (include UC_Plan)
+Report --> Organizer: Готовый отчёт
+
+@enduml
