@@ -1,71 +1,96 @@
 @startuml
-title Диаграмма классов умной системы лифта
+title Упрощённая диаграмма классов "Умная система лифта"
 
-' Классы акторов
+' === Акторы ===
 class Passenger {
-    +callElevator()
-    +selectFloor()
-    +checkStatus()
+  + callElevator(): void
+  + selectFloor(): void
+  + checkStatus(): String
 }
 
 class Dispatcher {
-    +requestDiagnostics()
+  + requestDiagnostics(): void
 }
 
 class SecuritySystem {
-    +triggerEmergencyStop()
+  + triggerEmergencyStop(): void
 }
 
-' Основной класс системы
+' === Основная система ===
 class ElevatorSystem {
-    +callElevator()
-    +selectFloor()
-    +openDoors()
-    +updateStatus()
-    +emergencyStop()
-    +performDiagnostics()
+  - currentFloor: int
+  - direction: String
+  - isEmergency: boolean
+  --
+  + callElevator(floor: int): void
+  + selectFloor(floor: int): void
+  + openDoors(): void
+  + closeDoors(): void
+  + updateStatus(): void
+  + emergencyStop(): void
+  + performDiagnostics(): Report
 }
 
-' Модули системы
+' === Подсистемы / модули ===
 class Requests {
-    +addCallRequest()
-    +addFloorRequest()
-    +processRequests()
+  - callQueue: List<int>
+  - floorQueue: List<int>
+  --
+  + addCallRequest(floor: int): void
+  + addFloorRequest(floor: int): void
+  + processRequests(): void
 }
 
 class Optimize {
-    +calculateOptimalRoute()
+  --
+  + calculateOptimalRoute(calls: List<int>, floors: List<int>): List<int>
 }
 
 class Doors {
-    +open()
-    +close()
+  - isOpen: boolean
+  --
+  + open(): void
+  + close(): void
 }
 
 class Status {
-    +updateDisplay()
-    +getStatus()
+  - statusText: String
+  --
+  + updateDisplay(): void
+  + getStatus(): String
 }
 
 class Diagnose {
-    +runDiagnostics()
-    +getReport()
+  --
+  + runDiagnostics(): void
+  + getReport(): Report
 }
 
-' Связи между актерами и системой
-Passenger --> ElevatorSystem
-Dispatcher --> ElevatorSystem
-SecuritySystem --> ElevatorSystem
+' === Связи акторов с системой ===
+Passenger --> ElevatorSystem : use
+Dispatcher --> ElevatorSystem : requests a report
+SecuritySystem --> ElevatorSystem : emergency stop
 
-' Агрегация / композиция модулей
+' === Композиция: система состоит из модулей ===
 ElevatorSystem *-- Requests
 ElevatorSystem *-- Optimize
 ElevatorSystem *-- Doors
 ElevatorSystem *-- Status
 ElevatorSystem *-- Diagnose
 
-' Взаимодействия между модулями (include/extend)
-Requests --> Optimize : <<include>>
-Doors --> ElevatorSystem : <<extend>> (при аварийной остановке)
+' === Взаимодействие между модулями ===
+Requests --> Optimize : <<use>>
+ElevatorSystem --> Doors : <<control>>
+ElevatorSystem --> Status : <<update>>
+ElevatorSystem --> Diagnose : <<invoke>>
+
+' === Бизнес-правила ===
+note right of ElevatorSystem
+**Бизнес-правила:**
+- Максимальная загрузка: ? пассажиров
+- Время закрытия дверей: ? сек
+- Лифт не движется при открытых дверях
+- При аварии двери автоматически открываются
+end note
 
 @enduml
